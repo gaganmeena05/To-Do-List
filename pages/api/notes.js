@@ -2,6 +2,7 @@ import { initDB } from "@/lib/dbInit";
 import { doc, getDoc } from "firebase/firestore";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
+import { dayjs } from "@/lib/dayjs";
 
 export default async function register(req, res) {
   return new Promise(async (resolve) => {
@@ -34,6 +35,9 @@ export default async function register(req, res) {
       }
       const userData = user.data();
       const notes = [];
+      if (userData.notes.length === 0) {
+        res.status(200).send({});
+      }
       for (let i = 0; i < userData.notes.length; i++) {
         const noteId = userData.notes[i];
         if (!noteId) continue;
@@ -42,11 +46,33 @@ export default async function register(req, res) {
         notes.push({ ...note.data(), id: noteId.id });
       }
 
+      notes.sort((a, b) => {
+        //sort by status, then by duedate, then by priority, last by created at
+        if (a.status !== b.status) return a.status === "completed" ? 1 : -1;
+        if (a.dueDate !== b.dueDate)
+          return dayjs(a.dueDate, "DD/MM/YYYY").diff(
+            dayjs(b.dueDate, "DD/MM/YYYY"),
+            "d"
+          );
+          //priortiy high comes first,mediumm then low
+          if(a.priority === "high" && b.priority === "medium") return -1
+          if(a.priority === "high" && b.priority === "low") return -1
+          if(a.priority === "medium" && b.priority === "low") return -1
+          if(a.priority === "medium" && b.priority === "high") return 1
+          if(a.priority === "low" && b.priority === "high") return 1
+          if(a.priority === "low" && b.priority === "medium") return 1
+          
+        return dayjs(a.createdAt, "DD/MM/YYYY").diff(
+          dayjs(b.createdAt, "DD/MM/YYYY"),
+          "d"
+        );
+      });
+
       res.status(200).send({ notes });
       return resolve();
     } catch (err) {
       console.log(err);
-      res.status(500).send({ error: "Internal Server Error" });
+      res.status(500).send({ error: "In" });
       return resolve();
     }
   });

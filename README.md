@@ -1,3 +1,12 @@
+## Deployed Link
+https://to-dol.vercel.app/
+
+## Github Link
+https://github.com/gaganmeena05/To-Do-List
+
+## Project Description
+Developed a daily task management application featuring essential functionalities such as task addition, deletion, and editing, along with the capability to mark tasks as completed. Leveraged real-time database technology, specifically Firebase, and implemented the solution using Next.js
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

@@ -20,7 +20,7 @@ function FormComponent({
   title = "",
   description = "",
   priority = "low",
-  dueDate = dayjs(),
+  dueDate = "",
   trigger,
   status = "active",
   noteId = "",
@@ -32,7 +32,7 @@ function FormComponent({
     const result = await res.json();
     setNotes(result.notes);
   },[setNotes]);
-
+  
   const form = useForm({
     initialValues: {
       title: title,
@@ -46,7 +46,7 @@ function FormComponent({
       description:
         values.description.length < 3 ? "Too short description" : null,
       dueDate:
-        dayjs(values.dueDate).diff(dayjs(), "d") < 0
+        dayjs(values.dueDate,"DD/MM/YYYY").diff(dayjs(), "d") < 0
           ? "Date Should be greater than current date"
           : null,
       priority: values.priority.length < 1 ? "No priority choosen" : null,
@@ -55,7 +55,10 @@ function FormComponent({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    form.validate();
     const data = form.values;
+    console.log(data)
+    console.log(dayjs(data.dueDate,).format("DD-MM-YYYY"))
     data.status = "active";
     if (trigger === "add") {
       const res = await fetch("/api/note", {
@@ -83,6 +86,7 @@ function FormComponent({
       if (res.ok) {
         await fetchData();
         close();
+        form.reset();
       }
     }
     if (trigger === "edit") {
@@ -99,6 +103,7 @@ function FormComponent({
       if (res.ok) {
         await fetchData();
         close();
+        form.reset();
       }
     }
   };

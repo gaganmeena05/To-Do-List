@@ -12,7 +12,7 @@ function NavbarComponent() {
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
-    <nav className="bg-white border-gray-200 dark:bg-gray-900">
+    <nav className="bg-black border-gray-200 dark:bg-gray-900">
       <div className=" flex flex-grow items-center justify-between p-4">
         <span
           className="self-center text-2xl font-semibold whitespace-nowrap"

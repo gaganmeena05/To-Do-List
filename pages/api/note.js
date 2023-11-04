@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
+import { dayjs } from "@/lib/dayjs";
 
 export default async function register(req, res) {
   return new Promise(async (resolve) => {
@@ -77,7 +78,6 @@ export default async function register(req, res) {
           });
           return resolve();
         }
-
         const db = await initDB();
         const note = collection(db, "notes");
         //update user
@@ -89,7 +89,7 @@ export default async function register(req, res) {
         }
         const userData = user.data();
         const notes = userData.notes;
-
+        console.log(dayjs(dueDate).format("DD/MM/YYYY"))
         try {
           const newRef = doc(note);
           await setDoc(
@@ -99,7 +99,7 @@ export default async function register(req, res) {
               description,
               priority,
               status,
-              dueDate,
+              dueDate: dayjs(dueDate).format("DD/MM/YYYY"),
               user: session.user.email,
               createdAt: serverTimestamp(),
             },
@@ -122,7 +122,7 @@ export default async function register(req, res) {
           return resolve();
         } catch (err) {
           console.log(err);
-          res.status(500).send({ error: "Internal Server Error" });
+          res.status(500).send({ error: "Internal Server Error12" });
           return resolve();
         }
       }

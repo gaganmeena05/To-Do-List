@@ -8,6 +8,7 @@ function HomeComponent() {
   const { data: session, status } = useSession();
   const [notes, setNotes] = useRecoilState(noteState);
   const [loading, setLoading] = useState(false);
+  console.log(notes)
 
   // Fetch notes from database
   useEffect(() => {
@@ -27,6 +28,7 @@ function HomeComponent() {
   // use;
   return (
     <div className="w-full grid grid-cols-3 md:grid-cols-6 lg:grid-cols-12">
+      
       {notes &&
         notes.map((note) => {
           return (
@@ -36,7 +38,7 @@ function HomeComponent() {
               title={note.title}
               description={note.description}
               priority={note.priority}
-              date={note.dueDate}
+              dueDate={note.dueDate}
               status={note.status}
             />
           );

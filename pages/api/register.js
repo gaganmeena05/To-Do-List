@@ -78,10 +78,15 @@ export default async function register(req, res) {
 
       //create user in firestore
       const userDoc = doc(db, "users", email);
-      await setDoc(userDoc, {
-        username,
-        createdAt: serverTimestamp(),
-      },{merge:true});
+      await setDoc(
+        userDoc,
+        {
+          username,
+          notes: [],
+          createdAt: serverTimestamp(),
+        },
+        { merge: true }
+      );
 
       res.status(200).send({ success: "User Created" });
       return resolve();

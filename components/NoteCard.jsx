@@ -43,7 +43,6 @@ function NoteCard({
   };
 
   const markNote = async (status) => {
-    console.log(status);
     const res = await fetch(`/api/note`, {
       method: "PATCH",
       body: JSON.stringify({
@@ -71,7 +70,7 @@ function NoteCard({
           {priority}
         </Badge>
       </div>
-      <Text className="mx-2">12/08/2023</Text>
+      <Text className="mx-2">{dueDate}</Text>
 
       <Text size="sm" c="dimmed">
         {description}
@@ -98,12 +97,13 @@ function NoteCard({
         >
           {status === "active" ? "Mark as Done" : "Make Active"}
         </Button>
+        
         <FormComponent
           opened={opened}
           close={close}
           description={description}
           title={title}
-          dueDate={dueDate}
+          // dueDate={dayjs(dueDate,"DD/MM/YYYY")}
           status={status}
           priority={priority}
           noteId={noteId}

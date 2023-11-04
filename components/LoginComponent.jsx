@@ -40,7 +40,7 @@ function LoginComponent() {
 
   return (
     <Card className="w-full lg:w-1/3 md:w-1/2">
-      <h1 className="text-center font-medium text-2xl">Sign In</h1>
+      <h1 className="text-center font-medium text-2xl">Log In</h1>
       <form
         className="space-y-5"
         onSubmit={form.onSubmit((values) => submitForm(values))}
