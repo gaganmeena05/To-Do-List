@@ -1,9 +1,15 @@
-import { Button, Card, Text, Badge } from "@mantine/core";
+import { Button, Card, Text, Badge, ActionIcon, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useCallback, useEffect, useState } from "react";
 import FormComponent from "./FormComponent";
 import { useRecoilState } from "recoil";
 import { noteState } from "@/atoms/noteState";
+import {
+  IconChecks,
+  IconEdit,
+  IconReload,
+  IconTrash,
+} from "@tabler/icons-react";
 
 function NoteCard({
   priority = "low",
@@ -32,6 +38,7 @@ function NoteCard({
     const result = await res.json();
     setNotes(result.notes);
   }, [setNotes]);
+  
 
   const deleteNote = async () => {
     const res = await fetch(`/api/note`, {
@@ -76,49 +83,59 @@ function NoteCard({
         {description}
       </Text>
 
-      <div className="flex flex-grow justify-between items-center">
-        <Button
-          variant="filled"
-          color="blue"
-          className="w-1/2"
-          mt="md"
-          radius="md"
-          onClick={open}
+      <div className="flex flex-grow justify-start items-center space-x-4">
+        <Tooltip
+          label={status === "active" ? "Mark As Done" : "Mark As Active"}
         >
-          Edit
-        </Button>
-        <Button
-          variant="filled"
-          color={status === "active" ? "green" : "gray"}
-          className="w-1/2"
-          mt="md"
-          radius="md"
-          onClick={() => markNote(status)}
-        >
-          {status === "active" ? "Mark as Done" : "Make Active"}
-        </Button>
-        
+          <ActionIcon
+            variant="filled"
+            color={status === "active" ? "green" : "gray"}
+            className="w-1/2"
+            mt="md"
+            radius="md"
+            onClick={() => markNote(status)}
+            size="lg"
+          >
+            {status === "active" ? <IconChecks /> : <IconReload />}
+          </ActionIcon>
+        </Tooltip>
+        <Tooltip label="Edit Entry">
+          <ActionIcon
+            variant="filled"
+            color="blue"
+            className="w-1/2"
+            mt="md"
+            radius="md"
+            onClick={open}
+            size="lg"
+          >
+            <IconEdit />
+          </ActionIcon>
+        </Tooltip>
         <FormComponent
           opened={opened}
           close={close}
           description={description}
           title={title}
-          // dueDate={dayjs(dueDate,"DD/MM/YYYY")}
           status={status}
           priority={priority}
           noteId={noteId}
+          dueDate={dueDate}
           trigger="edit"
         />
-        <Button
-          variant="filled"
-          color="red"
-          className="w-1/2"
-          mt="md"
-          radius="md"
-          onClick={deleteNote}
-        >
-          Delete
-        </Button>
+        <Tooltip label="Delete Entry">
+          <ActionIcon
+            variant="filled"
+            color="red"
+            className="w-1/2"
+            mt="md"
+            radius="md"
+            onClick={deleteNote}
+            size="lg"
+          >
+            <IconTrash />
+          </ActionIcon>
+        </Tooltip>
       </div>
     </Card>
   );

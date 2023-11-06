@@ -89,7 +89,6 @@ export default async function register(req, res) {
         }
         const userData = user.data();
         const notes = userData.notes;
-        console.log(dayjs(dueDate).format("DD/MM/YYYY"))
         try {
           const newRef = doc(note);
           await setDoc(
@@ -155,7 +154,7 @@ export default async function register(req, res) {
                 description,
                 priority,
                 status,
-                dueDate,
+                dueDate: dayjs(dueDate).format("DD/MM/YYYY"),
                 user: session.user.email,
                 createdAt: serverTimestamp(),
               },

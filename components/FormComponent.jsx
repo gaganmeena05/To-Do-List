@@ -20,7 +20,7 @@ function FormComponent({
   title = "",
   description = "",
   priority = "low",
-  dueDate = "",
+  dueDate = dayjs(),
   trigger,
   status = "active",
   noteId = "",
@@ -31,14 +31,14 @@ function FormComponent({
     const res = await fetch("/api/notes");
     const result = await res.json();
     setNotes(result.notes);
-  },[setNotes]);
-  
+  }, [setNotes]);
+
   const form = useForm({
     initialValues: {
       title: title,
       description: description,
       priority: priority,
-      dueDate: dueDate,
+      dueDate: dayjs(dueDate, "DD/MM/YYYY"),
       status: status,
     },
     validate: (values) => ({
@@ -46,7 +46,7 @@ function FormComponent({
       description:
         values.description.length < 3 ? "Too short description" : null,
       dueDate:
-        dayjs(values.dueDate,"DD/MM/YYYY").diff(dayjs(), "d") < 0
+        dayjs(values.dueDate, "DD/MM/YYYY").diff(dayjs(), "d") < 0
           ? "Date Should be greater than current date"
           : null,
       priority: values.priority.length < 1 ? "No priority choosen" : null,
@@ -58,7 +58,6 @@ function FormComponent({
     form.validate();
     const data = form.values;
     console.log(data)
-    console.log(dayjs(data.dueDate,).format("DD-MM-YYYY"))
     data.status = "active";
     if (trigger === "add") {
       const res = await fetch("/api/note", {
@@ -92,7 +91,6 @@ function FormComponent({
     if (trigger === "edit") {
       if (!noteId) return;
       data.noteId = noteId;
-      console.log(noteId);
       const res = await fetch("/api/note", {
         method: "PATCH",
         body: JSON.stringify(data),
@@ -106,6 +104,7 @@ function FormComponent({
         form.reset();
       }
     }
+    form.setValues(data);
   };
 
   return (
